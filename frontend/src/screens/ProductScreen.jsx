@@ -1,15 +1,25 @@
-import { useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
-import { Carousel } from 'react-responsive-carousel'
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import Rating from '../components/Rating'
-import products from '../products'
-import './carousel.css'; // 
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import Rating from '../components/Rating';
+import './carousel.css'; //
+import axios from 'axios';
 
 const ProductScreen = () => {
-  const { id: productId } = useParams()
-  const product = products.find((p) => p._id === productId)
+  const [product, setProduct] = useState({});
+  const { id: productId } = useParams();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const { data } = await axios.get(`/api/product/${productId}`);
+      setProduct(data);
+    };
+
+    fetchProduct();
+  }, [productId]);
 
   return (
     <>
@@ -18,13 +28,16 @@ const ProductScreen = () => {
       </Link>
       <Row>
         <Col md={5}>
-          <Carousel>
-            {product.additionalImages.map((image, index) => (
-              <div key={index}>
-                <Image src={image} alt={`Image ${index}`} fluid />
-              </div>
-            ))}
-          </Carousel>
+          {product.additionalImages &&
+            Array.isArray(product.additionalImages) && (
+              <Carousel showThumbs={false}>
+                {product.additionalImages.map((image, index) => (
+                  <div key={index}>
+                    <Image src={image} alt={`Image ${index}`} fluid />
+                  </div>
+                ))}
+              </Carousel>
+            )}
         </Col>
         <Col md={4}>
           <ListGroup variant='flush'>
@@ -76,7 +89,7 @@ const ProductScreen = () => {
         </Col>
       </Row>
     </>
-  )
-}
+  );
+};
 
-export default ProductScreen
+export default ProductScreen;
