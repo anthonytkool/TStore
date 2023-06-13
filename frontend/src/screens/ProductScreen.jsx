@@ -5,6 +5,7 @@ import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import Rating from '../components/Rating'
 import products from '../products'
+import './carousel.css'; // 
 
 const ProductScreen = () => {
   const { id: productId } = useParams()

@@ -1,0 +1,13 @@
+/* Modify the indicator color */
+.carousel .control-dots .dot {
+    background-color: rgb(66, 245, 7) !important;
+  }
+  
+  /* Modify the arrow color */
+  .carousel .control-next.control-arrow:before {
+    border-left: 8px solid rgb(66, 245, 7);
+}
+
+.carousel .control-prev.control-arrow:before {
+    border-right: 8px solid rgb(66, 245, 7);
+}
