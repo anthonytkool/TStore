@@ -9,18 +9,13 @@ import './carousel.css'; //
 import axios from 'axios';
 
 const ProductScreen = ({ match }) => {
-  // const { productName } = useParams();
   const [product, setProduct] = useState({});
   const { id: productId } = useParams();
 
   useEffect(() => {
     const fetchProduct = async () => {
-      try {
-        const { data } = await axios.get(`/api/products/${productId}`);
-        setProduct(data);
-      } catch (error) {
-        console.error('Error fetching product:', error);
-      }
+      const { data } = await axios.get(`/api/products/${productId}`);
+      setProduct(data);
     };
     fetchProduct();
   }, [productId]);
@@ -32,21 +27,17 @@ const ProductScreen = ({ match }) => {
       </Link>
       <Row>
         <Col md={5}>
-          {product &&
-          product.additionalImages &&
-          Array.isArray(product.additionalImages) ? (
-            <Carousel showThumbs={false}>
-              {product.additionalImages.map((image, index) => (
-                <div key={index}>
-                  <Image src={image} alt={`Image ${index}`} fluid />
-                </div>
-              ))}
-            </Carousel>
-          ) : (
-            <div>No additional images available.</div>
-          )}
+          {product.additionalImages &&
+            Array.isArray(product.additionalImages) && (
+              <Carousel showThumbs={false}>
+                {product.additionalImages.map((image, index) => (
+                  <div key={index}>
+                    <Image src={image} alt={`Image ${index}`} fluid />
+                  </div>
+                ))}
+              </Carousel>
+            )}
         </Col>
-
         <Col md={4}>
           <ListGroup variant='flush'>
             <ListGroup.Item>
