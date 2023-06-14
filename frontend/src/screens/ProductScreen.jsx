@@ -1,5 +1,5 @@
-import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
 import { Carousel } from 'react-responsive-carousel';
@@ -8,16 +8,20 @@ import Rating from '../components/Rating';
 import './carousel.css'; //
 import axios from 'axios';
 
-const ProductScreen = () => {
+const ProductScreen = ({ match }) => {
+  // const { productName } = useParams();
   const [product, setProduct] = useState({});
   const { id: productId } = useParams();
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const { data } = await axios.get(`/api/product/${productId}`);
-      setProduct(data);
+      try {
+        const { data } = await axios.get(`/api/products/${productId}`);
+        setProduct(data);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
     };
-
     fetchProduct();
   }, [productId]);
 
@@ -28,17 +32,21 @@ const ProductScreen = () => {
       </Link>
       <Row>
         <Col md={5}>
-          {product.additionalImages &&
-            Array.isArray(product.additionalImages) && (
-              <Carousel showThumbs={false}>
-                {product.additionalImages.map((image, index) => (
-                  <div key={index}>
-                    <Image src={image} alt={`Image ${index}`} fluid />
-                  </div>
-                ))}
-              </Carousel>
-            )}
+          {product &&
+          product.additionalImages &&
+          Array.isArray(product.additionalImages) ? (
+            <Carousel showThumbs={false}>
+              {product.additionalImages.map((image, index) => (
+                <div key={index}>
+                  <Image src={image} alt={`Image ${index}`} fluid />
+                </div>
+              ))}
+            </Carousel>
+          ) : (
+            <div>No additional images available.</div>
+          )}
         </Col>
+
         <Col md={4}>
           <ListGroup variant='flush'>
             <ListGroup.Item>
